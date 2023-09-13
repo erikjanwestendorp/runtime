@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace System.Linq
 {
@@ -27,6 +28,24 @@ namespace System.Linq
             }
 
             return source is IIListProvider<TSource> listProvider ? listProvider.ToList() : new List<TSource>(source);
+        }
+
+        public static List<TSource> TryToList(this IEnumerable<TSource>? source, [NotNullWhen(true)] out List<T>? result)
+        {
+            result = null;
+
+            if (source == null)
+            {
+                return false;
+            }
+
+            if (!source.Any())
+            {
+                return false;
+            }
+
+            result = source.ToList();
+            return true;
         }
 
         /// <summary>
